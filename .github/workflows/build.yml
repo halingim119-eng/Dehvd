@@ -14,8 +14,23 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: 8.7
-      - run: gradle assembleDebug
+      - name: Unzip project and build
+        run: |
+          ZIP=$(find . -maxdepth 2 -iname '*.zip' | head -n1)
+          if [ -n "$ZIP" ]; then
+            echo "Found zip: $ZIP"
+            mkdir -p /tmp/proj && unzip -q "$ZIP" -d /tmp/proj
+            DIR=$(dirname "$(find /tmp/proj -name settings.gradle.kts | head -n1)")
+          else
+            DIR=.
+          fi
+          echo "Project dir: $DIR"
+          cd "$DIR"
+          gradle assembleDebug
+          mkdir -p "$GITHUB_WORKSPACE/out"
+          cp app/build/outputs/apk/debug/*.apk "$GITHUB_WORKSPACE/out/"
       - uses: actions/upload-artifact@v4
         with:
           name: webtoon-apk
-          path: app/build/outputs/apk/debug/*.apk
+          path: out/*.apk
+
