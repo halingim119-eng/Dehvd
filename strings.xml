@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">웹툰 도우미</string>
+    <string name="desc">화면에 조작 바를 띄우고 자동 스크롤과 다음화 버튼 클릭을 수행합니다.</string>
+</resources>
